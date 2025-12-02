@@ -1,6 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include <stdint.h>
+#include <cmath>
 
 #include <stdlib.h>		// srand, rand
 #include <time.h>
@@ -48,6 +49,12 @@ Image *ReadImage(const char* filename)
 	// read header first
 	is.read((char*)&img->header, sizeof(ImageHeader));
 
+	if (img->header.height * img->header.width > std::pow(2, sizeof(uint16_t) * 8))
+	{
+		std::cout << "Image too big!" << std::endl;
+		exit(1);
+	}
+
 	// calculate image size
 	uint16_t imgsize = img->header.width * img->header.height;
 	img->data = new char[imgsize];
@@ -93,7 +100,7 @@ Image *GenerateDummyImage(uint16_t width, uint16_t height)
 
 int main()
 {
-	Image *im = ReadImage("img1.magi");
+	Image *im = ReadImage("img2.magi");
 	FreeImage(im);
 
 	return 0;
